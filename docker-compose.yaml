@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  cert-req:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gunet/cert-req
+    volumes:
+      - ./certs:/var/cert-req/certs
+    environment:
+      - ORG=${ORG:-GUNET}
+      - SERVER=${SERVER:-server.gunet.gr}
+      - TZ=Europe/Athens

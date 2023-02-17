@@ -1,0 +1,14 @@
+distinguished_name      = req_distinguished_name
+
+[ req_distinguished_name ]
+countryName                     = Country Name (2 letter code)
+countryName_default             = GR
+countryName_min                 = 2
+countryName_max                 = 2
+
+0.organizationName              = Organization Name (eg, company)
+0.organizationName_default      = $ENV::ORG
+
+commonName                      = Common Name (eg, YOUR name)
+commonName_default              = $ENV::SERVER
+commonName_max                  = 64

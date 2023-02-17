@@ -17,7 +17,7 @@ A simple Docker image to create certificate requests for web servers
 
 ## docker-compose
 * Build: `docker-compose build`
-* Run: `docker-compose run --rm cert-req <command>`
+* Run: `docker-compose run -e ORG=<ORG> -e SERVER=<hostname> --rm cert-req <command>`
 * CSR will be in $PWD/certs
 
 ## Image size

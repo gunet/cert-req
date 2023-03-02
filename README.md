@@ -6,19 +6,26 @@ A simple Docker image to create certificate requests for web servers
 * Renew certificate request reusing key: `openssl req -new -key certs/privkey.pem -out certs/server.csr -config server.cnf -batch`
 * Print CSR: `openssl req -text -noout -verify -in certs/server.csr`
 
+## Private Keys
+* Check if a private key is encrypted or not: `openssl rsa -text -noout -in <name of key>.key`
+* Encrypt a private key or change the passphrase: `openssl rsa -des -in <unencrypted name>.key -out <encrypted name>.key`
+* Remove the passphrase: `openssl rsa -in <encrypted name>.key -out <unencrypted name>.key`
+
 ## Docker
 * Build: `docker build -t gunet/cert-req:latest .`
-* Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -v $PWD/certs:/var/cert-req/certs gunet/cert-req`
+* Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -it -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
 * Possible arguments
   - `create`: Create a new private key and server.csr
   - `print`: Print CSR
   - `renew`: Regenerate the CSR reusing the same key
-* CSR will be in $PWD/certs
+  - `encrypt`: Encrypt the private key with a pass phrase
+  - `decrypy`: Remove the passphrase from an encrypted key
+* CSR and private key will be in $PWD/certs
 
 ## docker-compose
 * Build: `docker-compose build`
 * Run: `docker-compose run -e ORG=<ORG> -e SERVER=<hostname> --rm cert-req <command>`
-* CSR will be in $PWD/certs
+* CSR and private key will be in $PWD/certs
 
 ## Image size
 * gunet/cert-req: 82.5MB

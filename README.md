@@ -10,6 +10,7 @@ A simple Docker image to create certificate requests for web servers
 * Check if a private key is encrypted or not: `openssl rsa -text -noout -in <name of key>.key`
 * Encrypt a private key or change the passphrase: `openssl rsa -des -in <unencrypted name>.key -out <encrypted name>.key`
 * Remove the passphrase: `openssl rsa -in <encrypted name>.key -out <unencrypted name>.key`
+* Remove the passphrase using an environment variable: `openssl rsa -passin env:PRIVKEY_PASSPHRASE -in <encrypted named>.pem -out <unencrypted name>.key`
 
 ## Docker
 * Build: `docker build -t gunet/cert-req:latest .`

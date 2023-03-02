@@ -20,7 +20,7 @@ A simple Docker image to create certificate requests for web servers
   - `print`: Print CSR
   - `renew`: Regenerate the CSR reusing the same key
   - `encrypt`: Encrypt the private key with a pass phrase
-  - `decrypy`: Remove the passphrase from an encrypted key
+  - `decrypt`: Remove the passphrase from an encrypted key
 * CSR and private key will be in $PWD/certs
 
 ## docker-compose

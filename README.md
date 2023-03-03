@@ -11,9 +11,9 @@ A simple Docker image to create certificate requests for web servers
 * Encrypt a private key or change the passphrase: `openssl rsa -des -in <unencrypted name>.key -out <encrypted name>.key`
 * Remove the passphrase: `openssl rsa -in <encrypted name>.key -out <unencrypted name>.key`
 * Remove the passphrase using an environment variable: `openssl rsa -passin env:PRIVKEY_PASSPHRASE -in <encrypted named>.pem -out <unencrypted name>.key`
-* Symmetrical encryption on a file:
-  - Encrypt: `openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -pass pass:<pass> -in <unencrypted> -out <encrypted>`
-  - Decrypt: `openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt-d  -pass pass:<pass> -in <encrypted> -out <unencrypted>`
+* Symmetrical encryption on a file (passphrase in env variable):
+  - Encrypt: `openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt -pass env:ENCKEY_PASSPHRASE -in <unencrypted> -out <encrypted>`
+  - Decrypt: `openssl enc -aes-256-cbc -md sha512 -pbkdf2 -iter 100000 -salt-d  -pass env:ENCKEY_PASSPHRASE -in <encrypted> -out <unencrypted>`
 
 ## Docker
 * Build: `docker build -t gunet/cert-req:latest .`

@@ -24,6 +24,7 @@ A simple Docker image to create certificate requests for web servers
   - `renew`: Regenerate the CSR reusing the same key
   - `encrypt`: Encrypt the private key with a pass phrase
   - `decrypt`: Remove the passphrase from an encrypted key
+  - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the 
 * CSR and private key will be in $PWD/certs
 
 ## docker-compose

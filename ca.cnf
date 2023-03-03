@@ -1,0 +1,18 @@
+distinguished_name      = req_distinguished_name
+
+[ req_distinguished_name ]
+countryName                     = Country Name (2 letter code)
+countryName_default             = GR
+countryName_min                 = 2
+countryName_max                 = 2
+
+0.organizationName              = Organization Name (eg, company)
+0.organizationName_default      = $ENV::ORG
+
+commonName                      = Common Name (eg, YOUR name)
+commonName_default              = GUNET_SELFSIGN_CA
+commonName_max                  = 64
+
+[ ca_ext ]
+basicConstraints = critical,CA:TRUE,pathlen:0
+keyUsage = critical,digitalSignature,nonRepudiation,keyEncipherment,keyCertSign

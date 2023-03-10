@@ -1,4 +1,8 @@
+[ req ]
+default_bits            = 4096
+default_keyfile         = privkey.pem
 distinguished_name      = req_distinguished_name
+req_extensions = v3_req # The extensions to add to a certificate request
 
 [ req_distinguished_name ]
 countryName                     = Country Name (2 letter code)

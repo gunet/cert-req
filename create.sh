@@ -29,12 +29,12 @@ fi
 if [[ $# -gt 0 && $1 == "self-sign" ]]; then
     echo "Generating private CA key..."
     openssl genrsa -out certs/cakey.pem 4096
-    echo "Signing CA certificate..."
+    echo "Signing CA certificate (for 22 years)..."
     openssl req -x509 -new -nodes -key certs/cakey.pem -sha256 -days 8030 -config ca.cnf \
     -out certs/ca.crt -extensions ca_ext -batch
     echo "Generating server certificate CSR..."
     openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf -batch
-    echo "Signing server certificate..."
+    echo "Signing server certificate (for 20 years)..."
     openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAcreateserial \
     -out certs/server.crt -days 7300 -sha256
     exit 0

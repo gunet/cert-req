@@ -18,12 +18,20 @@ if [[ $# -gt 0 && $1 == "print" ]]; then
 fi
 if [[ $# -gt 0 && $1 == "encrypt" ]]; then
     echo "Encrypting private key .."
-    openssl rsa -des -in certs/privkey.pem -out certs/privkey.key
+    if [[ -v PASSPHRASE ]]; then
+        openssl rsa -des -pass env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
+    else
+        openssl rsa -des -in certs/privkey.pem -out certs/privkey.key
+    fi
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "decrypt" ]]; then
     echo "Decrypting private key .."
-    openssl rsa -in certs/privkey.key -out certs/privkey.pem
+    if [[ -v PASSPHRASE ]]; then
+        openssl rsa -pass env:PASSPHRASE -in certs/privkey.key -out certs/privkey.pem
+    else
+        openssl rsa -in certs/privkey.key -out certs/privkey.pem
+    fi
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "self-sign" ]]; then

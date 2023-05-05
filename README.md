@@ -21,7 +21,7 @@ A simple Docker image to create certificate requests for web servers
 
 ## Docker
 * Build: `docker build -t gunet/cert-req:latest .`
-* Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -it -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
+* Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
 * Possible arguments
   - `create`: Create a new private key and server.csr
   - `print`: Print CSR

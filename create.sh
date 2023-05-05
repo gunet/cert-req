@@ -19,7 +19,7 @@ fi
 if [[ $# -gt 0 && $1 == "encrypt" ]]; then
     echo "Encrypting private key .."
     if [[ -v PASSPHRASE ]]; then
-        openssl rsa -des -pass env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
+        openssl rsa -des -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
     else
         openssl rsa -des -in certs/privkey.pem -out certs/privkey.key
     fi
@@ -28,7 +28,7 @@ fi
 if [[ $# -gt 0 && $1 == "decrypt" ]]; then
     echo "Decrypting private key .."
     if [[ -v PASSPHRASE ]]; then
-        openssl rsa -pass env:PASSPHRASE -in certs/privkey.key -out certs/privkey.pem
+        openssl rsa -passin env:PASSPHRASE -in certs/privkey.key -out certs/privkey.pem
     else
         openssl rsa -in certs/privkey.key -out certs/privkey.pem
     fi

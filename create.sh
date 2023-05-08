@@ -1,14 +1,27 @@
 #!/bin/bash
 
+if [[ -v SUBJALTNAMES ]]; then
+    echo "${SUBJALTNAMES}"
+    ALTNAMES="subjectAltName = $(echo $SUBJALTNAMES|sed -e 's/\,/,DNS:/g' -e 's/^/DNS:/')"
+    echo ${ALTNAMES}
+fi
+
 if [[ $# -gt 0 && $1 == "renew" ]]; then
     echo "Generating server certificate CSR (reusing key).."
-    openssl req -new -key certs/privkey.pem -out certs/server.csr -config server.cnf -batch
+    if [[ -v SUBJALTNAMES ]]; then
+        openssl req -new -key certs/privkey.pem -addext "${ALTNAMES}" -out certs/server.csr -config server.cnf -batch
+    else
+        openssl req -new -key certs/privkey.pem -out certs/server.csr -config server.cnf -batch
+    fi
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "create" ]]; then
     echo "Generating server certificate CSR (recreating key).."
-    openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr \
-    -config server.cnf -batch
+    if [[ -v SUBJALTNAMES ]]; then    
+        openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -addext "${ALTNAMES}" -out certs/server.csr -config server.cnf -batch
+    else
+        openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf -batch
+    fi
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "print" ]]; then
@@ -41,10 +54,25 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
     openssl req -x509 -new -nodes -key certs/cakey.pem -sha256 -days 8030 -config ca.cnf \
     -out certs/ca.crt -extensions ca_ext -batch
     echo "Generating server certificate CSR..."
-    openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf -batch
+    if [[ -v SUBJALTNAMES ]]; then
+        openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -addext "${ALTNAMES}" \
+        -out certs/server.csr -config server.cnf -batch
+    else
+        openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf \
+        -batch
+    fi
+    set -x
     echo "Signing server certificate (for 20 years)..."
-    openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAcreateserial \
-    -out certs/server.crt -days 7300 -sha256
+    if [[ -v SUBJALTNAMES ]]; then
+        echo ${ALTNAMES} > certs/req.ext
+        openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAcreateserial \
+        -out certs/server.crt -days 7300 -sha256 -extfile certs/req.ext
+        rm certs/req.ext        
+    else
+        openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAcreateserial \
+        -out certs/server.crt -days 7300 -sha256
+    fi
+    set -v
     exit 0
 fi
 

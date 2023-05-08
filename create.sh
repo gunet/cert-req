@@ -70,6 +70,7 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
         -out certs/server.crt -days 7300 -sha256
     fi
     if [[ -v PASSPHRASE ]]; then
+        echo "Encrypting private key using PASSPHRASE env var.."
         openssl rsa -passin env:PASSPHRASE -in certs/privkey.key -out certs/privkey.pem
     fi    
     exit 0

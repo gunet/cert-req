@@ -19,6 +19,12 @@ A simple Docker image to create certificate requests for web servers
   - `pass:${PASS}`: A text passphrase
   - `env:PASS`: The passphrase will take the value of the environment variable `PASS`
 
+## Environment Variables
+* `ORG`: Organization (ie `GUNET`)
+* `SERVER`: The server DNS name
+* `PASSPHRASE`: The passphrase to use when encryting/decrypting. If it is not passed as an environment variable, it will be requested (you need to pass `-it` option in this case)
+* `SUBJALTNAMES`: A comma separated list of subAltNames to be included in the certificate request/self-signed certificate.
+
 ## Docker
 * Build: `docker build -t gunet/cert-req:latest .`
 * Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
@@ -30,7 +36,7 @@ A simple Docker image to create certificate requests for web servers
   - `decrypt`: Remove the passphrase from an encrypted key
   - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs
 * Passphrase:
-  - Generally, the passphrase will requested (applies to `encrypt` and `decrypt` arguments)
+  - Generally, the passphrase will be requested (applies to `encrypt` and `decrypt` arguments)
   - If an environment variable called `PASSPHRASE` is present then that will be used
 
 ## docker-compose

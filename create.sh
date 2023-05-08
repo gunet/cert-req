@@ -69,6 +69,9 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
         openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAcreateserial \
         -out certs/server.crt -days 7300 -sha256
     fi
+    if [[ -v PASSPHRASE ]]; then
+        openssl rsa -passin env:PASSPHRASE -in certs/privkey.key -out certs/privkey.pem
+    fi    
     exit 0
 fi
 

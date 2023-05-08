@@ -1,9 +1,7 @@
 #!/bin/bash
 
 if [[ -v SUBJALTNAMES ]]; then
-    echo "${SUBJALTNAMES}"
     ALTNAMES="subjectAltName = $(echo $SUBJALTNAMES|sed -e 's/\,/,DNS:/g' -e 's/^/DNS:/')"
-    echo ${ALTNAMES}
 fi
 
 if [[ $# -gt 0 && $1 == "renew" ]]; then
@@ -61,7 +59,6 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
         openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf \
         -batch
     fi
-    set -x
     echo "Signing server certificate (for 20 years)..."
     if [[ -v SUBJALTNAMES ]]; then
         echo ${ALTNAMES} > certs/req.ext
@@ -72,7 +69,6 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
         openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAcreateserial \
         -out certs/server.crt -days 7300 -sha256
     fi
-    set -v
     exit 0
 fi
 

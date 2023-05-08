@@ -34,10 +34,11 @@ A simple Docker image to create certificate requests for web servers
   - `renew`: Regenerate the CSR reusing the same key
   - `encrypt`: Encrypt the private key with a pass phrase
   - `decrypt`: Remove the passphrase from an encrypted key
-  - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs
+  - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs.
 * Passphrase:
   - Generally, the passphrase will be requested (applies to `encrypt` and `decrypt` arguments)
   - If an environment variable called `PASSPHRASE` is present then that will be used
+  - If the environment variable is present and the command is `self-sign` then we will use it to encrypt the private key as well.
 
 ## docker-compose
 * Build: `docker-compose build`

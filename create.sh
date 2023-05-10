@@ -37,7 +37,6 @@ if [[ $# -gt 0 && $1 == "encrypt" ]]; then
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "encrypt-file" ]]; then
-    set -x
     if [[ -v FILE ]]; then
         ENC_FILE="${FILE}.aes"
         if [[ ! -f ${FILE} ]]; then
@@ -54,7 +53,6 @@ if [[ $# -gt 0 && $1 == "encrypt-file" ]]; then
         echo "No FILE environment variable!"
         exit 1
     fi
-    set -v
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "decrypt" ]]; then
@@ -67,7 +65,6 @@ if [[ $# -gt 0 && $1 == "decrypt" ]]; then
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "decrypt-file" ]]; then
-    set -x
     if [[ -v FILE ]]; then
         if [[ ! ${FILE} =~ .aes$ ]]; then
             echo "File ${FILE} does not have an .aes extension!"
@@ -92,7 +89,6 @@ if [[ $# -gt 0 && $1 == "decrypt-file" ]]; then
         echo "No FILE environment variable!"
         exit 1
     fi
-    set -v
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "self-sign" ]]; then

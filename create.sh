@@ -122,12 +122,55 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
     fi    
     exit 0
 fi
+if [[ $# -gt 0 && $1 == "resign" ]]; then
+    if [[ ! -f certs/cakey.pem && ! -f certs/cakey.key ]]; then
+        echo "Could not find CA private key. Exiting!"
+        exit 1
+    fi
+    if [[ ! -f certs/server.csr ]]; then
+        echo "Could not find certs/server.csr file. Exiting!"
+        exit 1
+    fi
+    if [[ ! -f certs/ca.crt ]]; then
+        echo "Could not find certs/ca.crt. Exiting!"
+        exit 1
+    fi
+    if [[ ! -f certs/ca.srl ]]; then
+        echo "Could not find serial file certs/ca.srl. Exiting!"
+        exit 1
+    fi
+    if [[ -f certs/cakey.key ]]; then
+        echo "Found CA encrypted key. Decrypting.."
+        if [[ -v PASSPHRASE ]]; then
+            openssl rsa -passin env:PASSPHRASE -in certs/cakey.key -out certs/cakey.pem
+        else
+            openssl rsa -in certs/cakey.key -out certs/cakey.pem
+        fi
+        RM_CAKEY=1
+    fi
+    echo "re-signing private key using the existing CA (for 20 years).."
+    if [[ -v SUBJALTNAMES ]]; then
+        echo ${ALTNAMES} > certs/req.ext
+        openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAserial certs/ca.srl \
+        -out certs/server.crt -days 7300 -sha256 -extfile certs/req.ext
+        rm certs/req.ext        
+    else
+        openssl x509 -req -in certs/server.csr -CA certs/ca.crt -CAkey certs/cakey.pem -CAserial certs/ca.srl \
+        -out certs/server.crt -days 7300 -sha256
+    fi
+    if [[ ${RM_CAKEY} -eq 1 ]]; then
+        rm certs/cakey.pem
+    fi
+    exit 0
+fi
 
 echo "Usage: $0 <option>"
 echo "Available options:"
-echo "create    Create a new private key and server.csr"
-echo "print     Print CSR"
-echo "renew     Regenerate the CSR reusing the same key"
-echo "encrypt   Encrypt the private key with a passphrase"
-echo "decrypt   Decrypt an encrypted private key"
-echo "self-sign Self sign a certificate"
+echo "create        Create a new private key and server.csr"
+echo "print         Print CSR"
+echo "renew         Regenerate the CSR reusing the same key"
+echo "encrypt       Encrypt the private key with a passphrase"
+echo "decrypt       Decrypt an encrypted private key"
+echo "encrypt-file  Symmetrical encryption of a file"
+echo "decrypt-file  Symmetrical decryption of a file"
+echo "self-sign     Self sign a certificate"

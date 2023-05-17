@@ -19,6 +19,13 @@ A simple Docker image to create certificate requests for web servers
   - `pass:${PASS}`: A text passphrase
   - `env:PASS`: The passphrase will take the value of the environment variable `PASS`
 
+## Print Certificate
+* Print certificate: `openssl x509 -text -in server.crt`
+* Print certificate chain: `openssl crl2pkcs7 -nocrl -certfile server.crt | openssl pkcs7 -print_certs -noout`
+* Print md5 checksums:
+  - For certificate: `openssl x509 -noout -modulus -in server.crt| openssl md5`
+  - For key: `openssl rsa -noout -modulus -in privkey.pem| openssl md5`
+
 ## Environment Variables
 * `ORG`: Organization (ie `GUNET`)
 * `SERVER`: The server DNS name

@@ -26,6 +26,11 @@ A simple Docker image to create certificate requests for web servers
   - For certificate: `openssl x509 -noout -modulus -in server.crt| openssl md5`
   - For key: `openssl rsa -noout -modulus -in privkey.pem| openssl md5`
 
+## OpenSSL connect
+* We can use `openssl s_client` to directly connect to a server and check the TLS protocol
+* The usual run is: `openssl s_client -connect <name>:443`
+* If we add the `-servername` argument then openssl also does SNI
+
 ## Environment Variables
 * `ORG`: Organization (ie `GUNET`)
 * `SERVER`: The server DNS name

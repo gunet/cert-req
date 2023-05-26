@@ -21,6 +21,7 @@ A simple Docker image to create certificate requests for web servers
 
 ## Print Certificate
 * Print certificate: `openssl x509 -text -in server.crt`
+* Print a certificate which is stored in DER format (usually certificates taken from an `Authority Information Access` endpoint): `openssl x509 -text -inform der -in <cert-file>`
 * Print certificate chain: `openssl crl2pkcs7 -nocrl -certfile server.crt | openssl pkcs7 -print_certs -noout`
 * Print md5 checksums:
   - For certificate: `openssl x509 -noout -modulus -in server.crt| openssl md5`

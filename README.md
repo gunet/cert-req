@@ -8,7 +8,8 @@ A simple Docker image to create certificate requests for web servers
 
 ## Private Keys
 * Check if a private key is encrypted or not: `openssl rsa -text -noout -in <name of key>.key`
-* Encrypt a private key or change the passphrase: `openssl rsa -des -passout PASS -in <unencrypted name> -out <encrypted name>`
+* Encrypt a private key or change the passphrase: `openssl rsa -aes256 -passout PASS -in <unencrypted name> -out <encrypted name>`
+  - Note: Some algorithms like `des` are **not** supported by default by OpenSSL `v3.0` and should **not** be used
 * Remove the passphrase: `openssl rsa -in <encrypted name> -out <unencrypted name>`
 * Remove the passphrase (passing the passphrase): `openssl rsa -passin PASS -in <encrypted named> -out <unencrypted name>`
 * It is usually recommended to have the unencrypted private key end in `.pem` and the encrypted in `.key`

@@ -117,8 +117,8 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
     fi
     if [[ -v PASSPHRASE ]]; then
         echo "Encrypting private keys using PASSPHRASE env var.."
-        openssl rsa -des -passout env:PASSPHRASE -in certs/cakey.pem -out certs/cakey.key
-        openssl rsa -des -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
+        openssl rsa -aes256 -passout env:PASSPHRASE -in certs/cakey.pem -out certs/cakey.key
+        openssl rsa -aes256 -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
     fi    
     exit 0
 fi

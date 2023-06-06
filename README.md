@@ -32,6 +32,49 @@ A simple Docker image to create certificate requests for web servers
 * We can use `openssl s_client` to directly connect to a server and check the TLS protocol
 * The usual run is: `openssl s_client -connect <name>:443`
 * If we add the `-servername` argument then openssl also does SNI
+### Testing SMTP (StartTLS)
+* [Reference](https://halon.io/blog/how-to-test-smtp-servers-using-the-command-line)
+* Connect to an SMTP server with StartTLS: `openssl s_client -quiet -connect relay.grnet.gr:587 -starttls smtp`
+* The `-quiet` flag is important in order to be able to issue capitalized SMTP commands with no problem.
+* Total test:
+```
+# openssl s_client -quiet -connect relay.grnet.gr:587 -starttls smtp
+depth=2 C = US, ST = New Jersey, L = Jersey City, O = The USERTRUST Network, CN = USERTrust RSA Certification Authority
+verify return:1
+depth=1 C = NL, O = GEANT Vereniging, CN = GEANT OV RSA CA 4
+verify return:1
+depth=0 C = GR, ST = Attik\C3\AD, O = National Infrastructures for Research and Technology, CN = relay.grnet.gr
+verify return:1
+250 HELP
+MAIL FROM: <kkalev@noc.ntua.gr>
+250 OK
+RCPT TO: <kkalev@gunet.gr>
+250 Accepted
+DATA
+354 Enter message, ending with "." on a line by itself
+Subject: Test
+test
+.
+250 OK id=1q6SbR-0007fb-Tr
+QUIT
+221 relay.grnet.gr closing connection
+```
+* Test SMTP auth:
+```
+# echo -n "username" | base64
+dXNlcm5hbWU=
+# echo -n "password" | base64
+cGFzc3dvcmQ=
+
+(cut)
+250 8BITMIME
+AUTH LOGIN
+334 VXNlcm5hbWU6
+dXNlcm5hbWU=
+334 UGFzc3dvcmQ6
+cGFzc3dvcmQ=
+235 2.7.0 Authentication successful
+```
 
 ## Environment Variables
 * `ORG`: Organization (ie `GUNET`)

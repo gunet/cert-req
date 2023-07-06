@@ -7,6 +7,6 @@ RUN apt-get -qq update && apt-get -qqy install --no-install-recommends openssl &
     apt-get clean && rm -rf /var/lib/apt/lists/*
 WORKDIR /var/cert-req
 COPY *.cnf ./
-COPY create.sh .
+COPY scripts/create.sh .
 RUN chmod 0755 create.sh
 ENTRYPOINT [ "/var/cert-req/create.sh" ]

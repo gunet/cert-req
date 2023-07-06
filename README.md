@@ -27,6 +27,14 @@ A simple Docker image to create certificate requests for web servers
 * Print md5 checksums:
   - For certificate: `openssl x509 -noout -modulus -in server.crt| openssl md5`
   - For key: `openssl rsa -noout -modulus -in privkey.pem| openssl md5`
+* Expiration:
+  - Show expiration: `openssl x509 -noout -enddate -in server.crt`
+  - Show all dates: `openssl x509 -noout -dates -in server.crt`
+  - Check expiration: `openssl x509 -noout -checkend <seconds> -in server.crt`
+
+## crt.sh
+* [crt.sh](https://crt.sh/) is a tool to check/download Sectigo certificates online
+* Return a JSON strcture with non-expired leaf certificates for a specific domain: `https://crt.sh/?Identity=<domaain>&exclude=expired&deduplicate=Y&output=json`
 
 ## OpenSSL connect
 * We can use `openssl s_client` to directly connect to a server and check the TLS protocol

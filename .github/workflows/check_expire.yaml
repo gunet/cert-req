@@ -36,7 +36,7 @@ jobs:
             echo "Certificate is outside expiration bounds or has expired"
             EXPIRED=yes
             echo "has_expired=${EXPIRED}" >> $GITHUB_OUTPUT
-          fi
+          fi;
           EXP_DATE=$(openssl x509 -noout -enddate -in ${{ inputs.file }})
           echo "Certificate expiration date: ${EXP_DATE}"
           echo "expire_date=${EXP_DATE}" >> $GITHUB_OUTPUT

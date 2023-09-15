@@ -1,6 +1,42 @@
 # cert-req
 A simple Docker image to create certificate requests for web servers
 
+## Certificate operations via docker run
+* (Optional) Build: `docker build -t gunet/cert-req:latest .`
+* (Typical) Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
+* If we want to pass the passphrase in stdin then we **need** to add the `-it` option.
+* Possible arguments
+  - `create`: Create a new private key and server.csr
+  - `print`: Print CSR
+  - `renew`: Regenerate the CSR reusing the same key
+  - `encrypt`: Encrypt the private key with a pass phrase
+  - `decrypt`: Remove the passphrase from an encrypted key
+  - `encrypt-file`: Encrypt the file provided in the `FILE` environment variable with the `PASSPHRASE` (or we will request it) with symmetrical encryption. The resulting file will get a `.aes` extension
+  - `decrypt-file`: Decrypt the file with symmetrical encryption. For the output file we remove the `.aes` extension. If it does not exist, we fail.
+  - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs.
+  - `resign`: Re-sign the server certificate using the existing CA.
+* Passphrase:
+  - Generally, the passphrase will be requested.
+  - If an environment variable called `PASSPHRASE` is present then that will be used
+  - If the environment variable is present and the command is `self-sign` then we will use it to encrypt the private key as well.
+
+## docker-compose
+* Build: `docker-compose build`
+* Run: `docker-compose run -e ORG=<ORG> -e SERVER=<hostname> --rm cert-req <command>`
+* CSR and private key will be in $PWD/certs
+
+
+## Environment Variables
+* `ORG`: Organization (ie `GUNET`)
+* `SERVER`: The server DNS name
+* `PASSPHRASE`: The passphrase to use when encryting/decrypting. If it is not passed as an environment variable, it will be requested (you need to pass `-it` option in this case)
+* `SUBJALTNAMES`: A comma separated list of subAltNames to be included in the certificate request/self-signed certificate.
+* `FILE`: The (absolute) path (in the container context) for a file to be encrypted or decrypted
+
+## Image size
+* gunet/cert-req: 82.5MB
+  - debian:bullseye-slm: 80.5MB
+
 ## Process
 * Create certificate request with new key: `openssl req -new -newkey rsa:4096 -nodes -keyout privkey.pem -out server.csr -config server.cnf -batch`
 * Renew certificate request reusing key: `openssl req -new -key certs/privkey.pem -out certs/server.csr -config server.cnf -batch`
@@ -84,38 +120,3 @@ dXNlcm5hbWU=
 cGFzc3dvcmQ=
 235 2.7.0 Authentication successful
 ```
-
-## Environment Variables
-* `ORG`: Organization (ie `GUNET`)
-* `SERVER`: The server DNS name
-* `PASSPHRASE`: The passphrase to use when encryting/decrypting. If it is not passed as an environment variable, it will be requested (you need to pass `-it` option in this case)
-* `SUBJALTNAMES`: A comma separated list of subAltNames to be included in the certificate request/self-signed certificate.
-* `FILE`: The (absolute) path (in the container context) for a file to be encrypted or decrypted
-
-## Docker
-* Build: `docker build -t gunet/cert-req:latest .`
-* (Typical) Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
-* If we want to pass the passphrase in stdin then we **need** to add the `-it` option.
-* Possible arguments
-  - `create`: Create a new private key and server.csr
-  - `print`: Print CSR
-  - `renew`: Regenerate the CSR reusing the same key
-  - `encrypt`: Encrypt the private key with a pass phrase
-  - `decrypt`: Remove the passphrase from an encrypted key
-  - `encrypt-file`: Encrypt the file provided in the `FILE` environment variable with the `PASSPHRASE` (or we will request it) with symmetrical encryption. The resulting file will get a `.aes` extension
-  - `decrypt-file`: Decrypt the file with symmetrical encryption. For the output file we remove the `.aes` extension. If it does not exist, we fail.
-  - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs.
-  - `resign`: Re-sign the server certificate using the existing CA.
-* Passphrase:
-  - Generally, the passphrase will be requested.
-  - If an environment variable called `PASSPHRASE` is present then that will be used
-  - If the environment variable is present and the command is `self-sign` then we will use it to encrypt the private key as well.
-
-## docker-compose
-* Build: `docker-compose build`
-* Run: `docker-compose run -e ORG=<ORG> -e SERVER=<hostname> --rm cert-req <command>`
-* CSR and private key will be in $PWD/certs
-
-## Image size
-* gunet/cert-req: 82.5MB
-  - debian:bullseye-slm: 80.5MB

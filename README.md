@@ -120,3 +120,5 @@ dXNlcm5hbWU=
 cGFzc3dvcmQ=
 235 2.7.0 Authentication successful
 ```
+## OpenSSL Timer
+* OpenSSL also provides an option to time SSL connections for a server: `openssl s_time -connect <host>:<port>`

@@ -9,7 +9,7 @@ on:
     paths:
       - 'Dockerfile'
       - 'server.cnf'
-      - 'create.sh'
+      - 'scripts/**'
 
 jobs:
   image-build:

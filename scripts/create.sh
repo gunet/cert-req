@@ -30,9 +30,9 @@ fi
 if [[ $# -gt 0 && $1 == "encrypt" ]]; then
     echo "Encrypting private key .."
     if [[ -v PASSPHRASE ]]; then
-        openssl rsa -des -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
+        openssl rsa -aes256 -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
     else
-        openssl rsa -des -in certs/privkey.pem -out certs/privkey.key
+        openssl rsa -aes256 -in certs/privkey.pem -out certs/privkey.key
     fi
     exit 0
 fi

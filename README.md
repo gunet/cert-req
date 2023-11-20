@@ -5,6 +5,7 @@ A simple Docker image to create certificate requests for web servers
 * (Optional) Build: `docker build -t gunet/cert-req:latest .`
 * (Typical) Run: `docker run --rm -e ORG=<ORG> -e SERVER=<hostname> -v $PWD/certs:/var/cert-req/certs gunet/cert-req <argument>`
 * If we want to pass the passphrase in stdin then we **need** to add the `-it` option.
+* Files (certificates, private keys, CSRs etc) will be in folder `$PWD/certs`
 * Possible arguments
   - `create`: Create a new private key and server.csr
   - `print`: Print CSR
@@ -19,6 +20,11 @@ A simple Docker image to create certificate requests for web servers
   - Generally, the passphrase will be requested.
   - If an environment variable called `PASSPHRASE` is present then that will be used
   - If the environment variable is present and the command is `self-sign` then we will use it to encrypt the private key as well.
+* Filenames:
+  - Certificate: `server.crt`
+  - CSR: `server.csr`
+  - Private key (no passphrase): `privkey.pem`
+  - Private key (encrypted with passphrase): `privkey.key`
 
 ## docker-compose
 * Build: `docker-compose build`

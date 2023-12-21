@@ -21,7 +21,7 @@ jobs:
           timezone: "Europe/Athens"
       - name: Get date
         id: date
-        run: echo "push_date=$(date '+%H:%M@%d/%m/%Y')" >> $GITHUB_ENV
+        run: echo "push_date=$(date '+%H:%M@%d/%m/%Y')" >> $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@v3
       - name: Login to Docker Hub
@@ -38,6 +38,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: gunet/cert-req:latest
-          labels: gr.gunet.cert-req.pushdate=${{ env.push_date }}
+          labels: gr.gunet.cert-req.pushdate=${{ steps.date.outputs.push_date }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

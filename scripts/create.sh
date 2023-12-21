@@ -166,7 +166,6 @@ fi
 if [[ $# -gt 0 && $1 == "dh" ]]; then
     echo "Creating DH params file .."
         openssl dhparam  -out certs/dh.pem 4096
-    fi
     exit 0
 fi
 

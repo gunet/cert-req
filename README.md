@@ -17,6 +17,7 @@ A simple Docker image to create certificate requests for web servers
   - `decrypt-file`: Decrypt the file with symmetrical encryption. For the output file we remove the `.aes` extension. If it does not exist, we fail.
   - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs.
   - `resign`: Re-sign the server certificate using the existing CA.
+  - `dh`: Create a `dh.pem` DH parameters file
 * Passphrase:
   - Generally, the passphrase will be requested.
   - If an environment variable called `PASSPHRASE` is present then that will be used
@@ -62,6 +63,9 @@ A simple Docker image to create certificate requests for web servers
 * `PASS` can be one of:
   - `pass:${PASS}`: A text passphrase
   - `env:PASS`: The passphrase will take the value of the environment variable `PASS`
+
+## DH Params
+* Create a DH params file (4096 bits length): ``
 
 ## Print Certificate
 * Print certificate: `openssl x509 -text -in server.crt`

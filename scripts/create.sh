@@ -163,6 +163,12 @@ if [[ $# -gt 0 && $1 == "resign" ]]; then
     fi
     exit 0
 fi
+if [[ $# -gt 0 && $1 == "dh" ]]; then
+    echo "Creating DH params file .."
+        openssl dhparam  -out certs/dh.pem 4096
+    fi
+    exit 0
+fi
 
 echo "Usage: $0 <option>"
 echo "Available options:"
@@ -174,3 +180,4 @@ echo "decrypt       Decrypt an encrypted private key"
 echo "encrypt-file  Symmetrical encryption of a file"
 echo "decrypt-file  Symmetrical decryption of a file"
 echo "self-sign     Self sign a certificate"
+echo "dh            Create a DH params file"

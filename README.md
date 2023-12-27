@@ -65,7 +65,7 @@ A simple Docker image to create certificate requests for web servers
   - `env:PASS`: The passphrase will take the value of the environment variable `PASS`
 
 ## DH Params
-* Create a DH params file (4096 bits length): ``
+* Create a DH params file (4096 bits length): `openssl dhparam  -out certs/dh.pem 4096`
 
 ## Print Certificate
 * Print certificate: `openssl x509 -text -in server.crt`
@@ -133,3 +133,11 @@ cGFzc3dvcmQ=
 ```
 ## OpenSSL Timer
 * OpenSSL also provides an option to time SSL connections for a server: `openssl s_time -connect <host>:<port>`
+
+## Performance
+* Reference: OpenVPN Cookbook 2nd edition, Chpt. 8
+* Modern CPUs have the AES-NI instruction set which speeds up encryption
+* You can run `openssl` speed test with:
+  - `openssl speed -evp aes-256-gcm` to test the `AES-256-GCM` cipher family
+  - `openssl speed -evp aes-256-cbc` to test the `AES-256-CBC` cipher family
+  - Use the `OPENSSL_ia32cap=0` environment variable to disable the `AES-NI` instruction set

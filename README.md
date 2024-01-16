@@ -131,6 +131,10 @@ dXNlcm5hbWU=
 cGFzc3dvcmQ=
 235 2.7.0 Authentication successful
 ```
+### Test SSL
+* The `testssl.sh` can run a set of SSL/TLS tests against a server. A Docker [image](https://hub.docker.com/r/drwetter/testssl.sh) is available
+* The simpe run is `docker run --rm -ti  drwetter/testssl.sh <host>[:<port>]`
+
 ## OpenSSL Timer
 * OpenSSL also provides an option to time SSL connections for a server: `openssl s_time -connect <host>:<port>`
 

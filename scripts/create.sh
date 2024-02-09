@@ -20,6 +20,11 @@ if [[ $# -gt 0 && $1 == "create" ]]; then
     else
         openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf -batch
     fi
+    if [[ -v PASSPHRASE ]]; then
+        echo "PASSPHRASE env var present. Encrypting private key and deleting plain-text private key"
+        openssl rsa -aes256 -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
+        rm certs/privkey.pem
+    fi
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "print" ]]; then

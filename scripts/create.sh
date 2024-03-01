@@ -97,6 +97,22 @@ if [[ $# -gt 0 && $1 == "decrypt-file" ]]; then
     exit 0
 fi
 if [[ $# -gt 0 && $1 == "self-sign" ]]; then
+    echo "Generating server certificate CSR (recreating key).."
+    if [[ -v SUBJALTNAMES ]]; then    
+        openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -addext "${ALTNAMES}" -out certs/server.csr -config server.cnf -batch
+    else
+        openssl req -new -newkey rsa:4096 -nodes -keyout certs/privkey.pem -out certs/server.csr -config server.cnf -batch
+    fi
+    echo "Self-signing the CSR (for 20 years).."
+    openssl req -x509 -in certs/server.csr -config server.cnf -key certs/privkey.pem -out certs/server.crt -days 7300 -sha256 -batch
+    if [[ -v PASSPHRASE ]]; then
+        echo "PASSPHRASE env var present. Encrypting private key and deleting plain-text private key"
+        openssl rsa -aes256 -passout env:PASSPHRASE -in certs/privkey.pem -out certs/privkey.key
+        rm certs/privkey.pem
+    fi
+    exit 0
+fi
+if [[ $# -gt 0 && $1 == "self-sign-ca" ]]; then
     echo "Generating private CA key..."
     openssl genrsa -out certs/cakey.pem 4096
     echo "Signing CA certificate (for 22 years)..."
@@ -127,7 +143,7 @@ if [[ $# -gt 0 && $1 == "self-sign" ]]; then
     fi    
     exit 0
 fi
-if [[ $# -gt 0 && $1 == "resign" ]]; then
+if [[ $# -gt 0 && $1 == "resign-ca" ]]; then
     if [[ ! -f certs/cakey.pem && ! -f certs/cakey.key ]]; then
         echo "Could not find CA private key. Exiting!"
         exit 1
@@ -183,5 +199,9 @@ echo "encrypt       Encrypt the private key with a passphrase"
 echo "decrypt       Decrypt an encrypted private key"
 echo "encrypt-file  Symmetrical encryption of a file"
 echo "decrypt-file  Symmetrical decryption of a file"
-echo "self-sign     Self sign a certificate"
+echo "self-sign-ca  Create a new private key and server.csr and"
+echo "              self sign a certificate (creating a CA)"
+echo "self-sign     Create a new private key and server.csr and"
+echo "              self sign the certificate"
+echo "resign-ca     Resign the request (using the CA)"
 echo "dh            Create a DH params file"

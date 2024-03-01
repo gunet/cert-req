@@ -15,13 +15,14 @@ A simple Docker image to create certificate requests for web servers
   - `decrypt`: Remove the passphrase from an encrypted key
   - `encrypt-file`: Encrypt the file provided in the `FILE` environment variable with the `PASSPHRASE` (or we will request it) with symmetrical encryption. The resulting file will get a `.aes` extension
   - `decrypt-file`: Decrypt the file with symmetrical encryption. For the output file we remove the `.aes` extension. If it does not exist, we fail.
-  - `self-sign`: Create a CA and self-sign a certificate. The certs folder will include the CSR and private key will be in $PWD/certs.
-  - `resign`: Re-sign the server certificate using the existing CA.
+  - `self-sign`: Create a new private key and CSR and self-sign the certificate.
+  - `self-sign-ca`: Create a CA, a private key and CSR and self-sign a certificate. The `certs/` folder will include the CSR and private key.
+  - `resign-ca`: Re-sign the server certificate using the existing CA.
   - `dh`: Create a `dh.pem` DH parameters file
 * Passphrase:
   - Generally, the passphrase will be requested.
   - If an environment variable called `PASSPHRASE` is present then that will be used
-  - If the environment variable is present and the command is `self-sign` then we will use it to encrypt the private key as well.
+  - If the environment variable is present and the command is `self-sign` or `self-sign-ca` then we will use it to encrypt the private key as well.
 * Filenames:
   - Certificate: `server.crt`
   - CSR: `server.csr`
@@ -47,6 +48,8 @@ A simple Docker image to create certificate requests for web servers
 
 ## Process
 * Create certificate request with new key: `openssl req -new -newkey rsa:4096 -nodes -keyout privkey.pem -out server.csr -config server.cnf -batch`
+* Create a self-signed certificate with new key: `openssl req -x509 -newkey rsa:4096 -nodes -keyout privkey.pem -out server.csr -config server.cnd -sha256 -days 7300 -batch`
+* Self-sign a certificate using an already existing CSR and private key: `openssl req -x509 -in server.csr -config server.cnf -key privkey.pem -out server.crt -days 7300 -sha256 -batch`
 * Renew certificate request reusing key: `openssl req -new -key certs/privkey.pem -out certs/server.csr -config server.cnf -batch`
 * Print CSR: `openssl req -text -noout -verify -in certs/server.csr`
 

@@ -1,7 +1,18 @@
 #!/bin/bash
 
 if [[ -v SUBJALTNAMES ]]; then
+    if [[ -z ${SUBJALTNAMES} ]]; then
+        echo "SUBJALTNAMES env var present but empty!!"
+        exit 1
+    fi
     ALTNAMES="subjectAltName = $(echo $SUBJALTNAMES|sed -e 's/\,/,DNS:/g' -e 's/^/DNS:/')"
+fi
+
+if [[ -v PASSPHRASE ]]; then
+    if [[ -z ${PASSPHRASE} ]]; then
+        echo "PASSPHRASE env var present but empty!!"
+        exit 1
+    fi
 fi
 
 if [[ $# -gt 0 && $1 == "renew" ]]; then

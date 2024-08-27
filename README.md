@@ -92,6 +92,15 @@ A simple Docker image to create certificate requests for web servers
 * The usual run is: `openssl s_client -connect <name>:443`
 * To quit just after TLS connection establishment: `time echo "Q" | openssl s_client -connect <name>:443 2>1 >/dev/null`
 * If we add the `-servername` argument then openssl also does SNI
+### Test HTTPS web
+* Use the `-quiet` and the `-crlf` options
+* Example:
+```
+# openssl s_client -connect sso.asfa.gr:443 -quiet -crlf
+GET /login HTTP/1.1
+Host: sso.asfa.gr
+
+```
 ### Testing SMTP (StartTLS)
 * [Reference](https://halon.io/blog/how-to-test-smtp-servers-using-the-command-line)
 * Connect to an SMTP server with StartTLS: `openssl s_client -quiet -connect relay.grnet.gr:587 -starttls smtp`

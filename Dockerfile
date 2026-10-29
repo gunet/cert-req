@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 LABEL org.opencontainers.image.source="https://github.com/gunet/cert-req"
 LABEL org.opencontainers.image.description="A simple Docker image to create certificate requests for web servers"
 ENV ORG=GUNET

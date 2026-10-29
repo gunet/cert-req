@@ -35,6 +35,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          provenance: false
+          sbom: false
           tags: gunet/cert-req:latest
           labels: gr.gunet.cert-req.pushdate=${{ steps.date.outputs.push_date }}
           cache-from: type=gha
